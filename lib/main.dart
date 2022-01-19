@@ -1,7 +1,6 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:news_api_app/components/customListTile.dart';
-import 'package:news_api_app/model/article_model.dart';
-import 'package:news_api_app/services/api_service.dart';
+import 'package:news_api_app/screens/home.dart';
 
 void main() {
   runApp(MyApp());
@@ -11,41 +10,35 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: HomePage(),
+      title: 'NEWS FEED',
+      theme: ThemeData(
+        primaryColor: Colors.black,
+      ),
+      home: MyHomePage(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
 
-class HomePage extends StatefulWidget {
+class MyHomePage extends StatefulWidget {
   @override
-  _HomePageState createState() => _HomePageState();
+  _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  ApiService client = ApiService();
+class _MyHomePageState extends State<MyHomePage> {
+  @override
+  void initState() {
+    super.initState();
+    Timer(
+        Duration(seconds: 3),
+        () => Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => Home())));
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("News App", style: TextStyle(color: Colors.black)),
-        backgroundColor: Colors.white
-      ),
-      body: FutureBuilder(
-        future: client.getArticle(),
-        builder: (BuildContext context, AsyncSnapshot<List<Article>> snapshot) {
-          if (snapshot.hasData) {
-            List<Article> articles = snapshot.data;
-            return ListView.builder(
-              itemCount: articles.length,
-              itemBuilder: (context, index) => customListTile(articles[index], context)
-            );
-          }
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        },
-      ),
-    );
+    return Container(
+        color: Colors.white,
+        child: FlutterLogo(size: MediaQuery.of(context).size.height));
   }
 }
